@@ -1,0 +1,14 @@
+Title: A Simple Reddit Clone
+Author: Rafael Sánchez Aguilú
+
+This is a simple Reddit made during two evenings.
+
+A quick rundown:
+
+- A link can be submitted by using the submission form at the top. You have to click the 'submit' button. Pressing 'enter' doesn't work.
+
+- Write the url without the 'http://'; it is added later.
+
+- You can upvote and downvote posts by clicking on the up and down arrows. The posts will automatically sort themselves.
+
+- Every post is saved in localStorage. I still haven't added the ability to delete posts so they can only be erased by clearing localStorage.

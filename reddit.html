@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <title>Reddit Clone</title>
+  <script type="text/javascript" src="jquery-1.5.min.js"></script>
+
+  <style type="text/css">
+      * {
+          font-family: 'Helvetica', arial, sans-serif;
+      }
+      body {
+          margin: 0;
+          padding: 0;
+          background-image: url(reddit-alien.svg);
+          background-repeat: no-repeat;
+          background-attachment: fixed;
+          background-position: right bottom;
+      }
+      #submit-form {
+          margin: 0;
+          padding: 0;
+          background-color: PowderBlue;
+      }
+      #main p {
+          padding-left: 20px;
+      }
+      #main p:hover {
+          cursor: pointer;
+      }
+  </style>
+</head>
+<body>
+    <div id="submit-form">
+        <span>Title</span><input id="submit-title" type="text" />
+        <span>URL</span><input id="submit-url" type="text" />
+        <input id="submit-button" type="button" value="Submit" onclick="addPost()" />
+    </div>
+
+    <div id="main">
+    </div>
+
+    <!-- "Backend" -->
+
+    <script type="text/javascript">
+        var db;
+        if (localStorage.getItem('db') === null || localStorage.getItem('db') === undefined) {
+            db = {
+                'posts': new Array(),
+            };
+        }
+        else {
+            db = JSON.parse(localStorage.getItem('db'));
+        }
+
+        onload = loadPosts();
+
+        function addPost() {
+            if ($('#submit-title').val() !== '' && $('#submit-url').val() !== '') {
+                db.posts.push({'title': $('#submit-title').val(), 'url': 'http://'+$('#submit-url').val(), 'votes': 1});
+                $('#submit-title').val('');
+                $('#submit-url').val('');
+                localStorage.setItem('db', JSON.stringify(db));
+                loadPosts();
+            }
+        }
+
+        function loadPosts() {
+            $('#main').empty();
+            db.posts.sort(function(a, b) { return b.votes - a.votes });
+            db.posts.forEach(function(post, index){
+                    $('#main').append("<p id='" + index + "'><span>" + (index + 1) + "</span> " + "<span onclick='upVote(" + index + ")'>&uarr;</span> <span class='votes'>" + post.votes + "</span> <span onclick='downVote(" + index + ")'>&darr;</span> <a href='" + post.url + "'>" + post.title + "</a></p>")
+            });
+        }
+
+        function upVote(i) {
+            db.posts[i].votes += 1;
+            localStorage.setItem('db', JSON.stringify(db));
+            $('#' + i.toString() + ' .votes').text(db.posts[i].votes);
+            loadPosts();
+        }
+
+        function downVote(i) {
+            db.posts[i].votes -= 1;
+            localStorage.setItem('db', JSON.stringify(db));
+            $('#' + i.toString() + ' .votes').text(db.posts[i].votes);
+            loadPosts();
+        }
+    </script>
+</body>
+</html>
